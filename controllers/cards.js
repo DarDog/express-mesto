@@ -3,7 +3,10 @@ const Cards = require('../models/card');
 module.exports.getCards = (req, res) => {
   Cards.find({})
     .then(cards => res.send({ cards: cards }))
-    .catch(err => res.status(500).send({ message: 'Ошибка на стороне сервера' }));
+    .catch(err => {
+      const ERROR_CODE = 500;
+      res.status(ERROR_CODE).send({message: 'Ошибка на стороне сервера'})
+    });
 }
 
 module.exports.setCard = (req, res) => {
@@ -14,10 +17,12 @@ module.exports.setCard = (req, res) => {
     .then(card => res.send({ card: card }))
     .catch(err => {
         if (err.name === 'ValidationError') {
-          res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' })
+          const ERROR_CODE = 400
+          res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя.' })
           return
         }
-        res.status(500).send({ message: 'Ошибка на стороне сервера' })
+      const ERROR_CODE = 500
+      res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' })
       }
     );
 }
@@ -27,10 +32,12 @@ module.exports.deleteCardById = (req, res) => {
     .then(card => res.send({ card: card }))
     .catch(err => {
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Карточка с указанным _id не найдена' })
+        const ERROR_CODE = 404
+        res.status(ERROR_CODE).send({ message: 'Карточка с указанным _id не найдена' })
         return
       }
-      res.status(500).send({ message: 'Ошибка на стороне сервера' })
+      const ERROR_CODE = 500
+      res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' })
     });
 }
 
@@ -40,14 +47,17 @@ module.exports.addLikeOnCard = (req, res) => {
     .then(card => res.send({ card: card }))
     .catch(err => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' })
+        const ERROR_CODE = 400
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя.' })
         return
       }
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Пользователь по указанному _id не найден' })
+        const ERROR_CODE = 404
+        res.status(ERROR_CODE).send({ message: 'Пользователь по указанному _id не найден' })
         return
       }
-      res.status(500).send({ message: 'Ошибка на стороне сервера' })
+      const ERROR_CODE = 500
+      res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' })
     });
 }
 
@@ -57,13 +67,16 @@ module.exports.removeLikeOnCard = (req, res) => {
     .then(card => res.send({ card: card }))
     .catch(err => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' })
+        const ERROR_CODE = 400
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя.' })
         return
       }
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Пользователь по указанному _id не найден' })
+        const ERROR_CODE = 404
+        res.status(ERROR_CODE).send({ message: 'Пользователь по указанному _id не найден' })
         return
       }
-      res.status(500).send({ message: 'Ошибка на стороне сервера' })
+      const ERROR_CODE = 500
+      res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' })
     });
 }
