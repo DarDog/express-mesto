@@ -8,7 +8,7 @@ const cardsSchema = new mongoose.Schema({
     required: true
   },
   link: {
-    type: ObjectId,
+    type: String,
     required: true
   },
   owner: {
