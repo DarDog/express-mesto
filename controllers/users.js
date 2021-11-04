@@ -8,11 +8,12 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params._id)
-    .then(user => res.send({ user: user }))
+    .then(user => res.send({ data: user }))
     .catch(err => res.status(500).send({ message: err.message }))
 }
 
 module.exports.setUser = (req, res) => {
+  console.log(req.body)
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
