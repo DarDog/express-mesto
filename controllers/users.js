@@ -5,17 +5,24 @@ module.exports.getUsers = (req, res) => {
     .then(users => res.send({ data: users }))
     .catch(err => {
       const ERROR_CODE = 500;
-      res.status(ERROR_CODE).send({message: 'Ошибка на стороне сервера'})
+      res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' })
     });
 }
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
-    .then(user => res.send({ data: user }))
+    .then(user => {
+      if (user === null) {
+        const ERROR_CODE = 404
+        res.status(ERROR_CODE).send({ message: 'Пользователь с таким _id не найден' })
+        return
+      }
+      res.send({ data: user })
+    })
     .catch(err => {
       if (err.name === 'CastError') {
-        const ERROR_CODE = 404
-        res.status(ERROR_CODE).send({ message: 'Пользователь по указанному _id не найден' })
+        const ERROR_CODE = 400
+        res.status(ERROR_CODE).send({ message: 'Введены некорректные данные' })
         return
       }
       const ERROR_CODE = 500
@@ -24,7 +31,6 @@ module.exports.getUserById = (req, res) => {
 }
 
 module.exports.setUser = (req, res) => {
-  console.log(req.body)
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
@@ -35,15 +41,21 @@ module.exports.setUser = (req, res) => {
           res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя.' })
           return
         }
-      const ERROR_CODE = 500
-      res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' })
+        const ERROR_CODE = 500
+        res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' })
       }
     );
 }
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    {
+      new: true,
+      runValidators: true
+    })
     .then(user => res.send(user))
     .catch(err => {
       if (err.name === 'ValidationError') {
@@ -52,8 +64,8 @@ module.exports.updateUser = (req, res) => {
         return
       }
       if (err.name === 'CastError') {
-        const ERROR_CODE = 404
-        res.status(ERROR_CODE).send({ message: 'Пользователь по указанному _id не найден' })
+        const ERROR_CODE = 400;
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя.' })
         return
       }
       const ERROR_CODE = 500
