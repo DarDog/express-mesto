@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getNotFound, postNotFound } = require('../controllers/notFound')
+const { getNotFound, postNotFound } = require('../controllers/notFound');
 
 router.get('/', getNotFound);
 router.get('/*', getNotFound);
