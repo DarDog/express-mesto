@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -117,3 +119,40 @@ module.exports.updateUserAvatar = (req, res) => {
       res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' });
     });
 };
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .then(user => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      const matched = bcrypt.compare(password, user.password)
+      const token = jwt.sign(
+        { _id: req.user._id },
+        '45ea781744ec7b4e07a1ff7e4adbd95bacff89e3d0266bb0e17a9f12ff31e01e',
+        { expiresIn: '7d' }
+      );
+
+      return { matched, token };
+    })
+    .then(result => {
+      if (!result.matched) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      res.cookie('token', result.token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+      })
+
+        .end();
+    })
+    .catch(err => {
+      res
+        .status(401)
+        .send({ message: err.message })
+    })
+}
