@@ -32,6 +32,18 @@ module.exports.getUserById = (req, res) => {
     });
 };
 
+module.exports.getCurrentUserInfo = (req, res) => {
+  User.findById(req.user._id)
+    .then(user => {
+      if (!user) {
+        const ERROR_CODE = 404;
+        res.status(ERROR_CODE).send({ message: 'Пользователь не найден' });
+        return;
+      }
+      res.send(user)
+    })
+}
+
 module.exports.setUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
 
@@ -54,6 +66,7 @@ module.exports.setUser = (req, res) => {
       res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' });
     });
 };
+
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 

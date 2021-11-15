@@ -5,6 +5,7 @@ const {
 
 router.get('/', getUsers);
 router.get('/:userId', getUserById);
+router.get('/me')
 router.patch('/me', updateUser);
 router.patch('/me/avatar', updateUserAvatar);
 
