@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, '45ea781744ec7b4e07a1ff7e4adbd95bacff89e3d0266bb0e17a9f12ff31e01e')
   } catch (err) {
-    next(new AuthError('Необходима авторизация'))
+    next(new AuthError('Ваш токен устарел или не валиден'))
   }
 
   req.user = payload;
