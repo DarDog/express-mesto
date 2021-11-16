@@ -1,9 +1,8 @@
 const router = require('express').Router();
-const { getNotFound, postNotFound } = require('../controllers/notFound');
+const { NotFoundErr } = require('../errors/not-found-err');
 
-router.get('/', getNotFound);
-router.get('/*', getNotFound);
-router.post('/', postNotFound);
-router.post('/*', postNotFound);
+app.use((req, res, next) => {
+  next(new NotFoundErr('Запрашиваемый ресурс не найден'))
+})
 
 module.exports = router;
