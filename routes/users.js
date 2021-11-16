@@ -7,8 +7,7 @@ const {
   updateUserAvatar,
 } = require('../controllers/users');
 const { celebrate, Joi } = require('celebrate')
-
-const regExp = /^https?:\/\/(www.)?[a-zA-Z0-9-.]+\.[a-zA-Z]{2,}([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]+)*#*$/;
+const regExp = require('../regExp/regExp')
 
 router.get('/', getUsers);
 router.get('/me', getCurrentUserInfo)

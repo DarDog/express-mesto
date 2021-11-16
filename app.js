@@ -5,10 +5,10 @@ const { login, setUser } = require('./controllers/users')
 const auth = require('./middlewares/auth')
 const { errorHandler } = require('./middlewares/errors')
 const { celebrate, Joi, errors } = require('celebrate')
+const regExp = require('./regExp/regExp')
 
 const { PORT = 3000 } = process.env;
 const app = express();
-const regExp = /^https?:\/\/(www.)?[a-zA-Z0-9-.]+\.[a-zA-Z]{2,}([a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]+)*#*$/
 
 app.use(bodyParser.json());
 
