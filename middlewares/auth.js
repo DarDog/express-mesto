@@ -5,8 +5,8 @@ module.exports = (req, res, next) => {
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return res
-      .status(401)
-      .send({ message: 'Необходима авторизация' });
+      .status(403)
+      .send({ message: 'К этому ресурсу есть доступ только для авторизированных пользователей' });
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
   let payload;
   try {
     payload = jwt.verify(token, '45ea781744ec7b4e07a1ff7e4adbd95bacff89e3d0266bb0e17a9f12ff31e01e')
-  } catch ( err ) {
+  } catch (err) {
     return res
       .status(401)
       .send({ message: 'Необходима авторизация' });
