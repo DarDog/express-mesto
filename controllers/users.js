@@ -49,7 +49,6 @@ module.exports.getCurrentUserInfo = (req, res) => {
 
 module.exports.setUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
-  console.log(password)
 
   bcrypt.hash(password, 10)
     .then(hash => User.create({
