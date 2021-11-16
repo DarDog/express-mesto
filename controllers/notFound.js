@@ -1,9 +1,9 @@
-module.exports.getNotFound = (req, res) => {
-  const ERROR_CODE = 404;
-  res.status(ERROR_CODE).send({ message: 'Запрашиваемый ресурс не найден' });
+const NotFoundError = require('../errors/not-found-err')
+
+module.exports.getNotFound = (req, res, next) => {
+  next(new NotFoundError('Запрашиваемый ресурс не найден'))
 };
 
-module.exports.postNotFound = (req, res) => {
-  const ERROR_CODE = 404;
-  res.status(ERROR_CODE).send({ message: 'Запрашиваемый ресурс не найден' });
+module.exports.postNotFound = (req, res, next) => {
+  next(new NotFoundError('Запрашиваемый ресурс не найден'))
 };
