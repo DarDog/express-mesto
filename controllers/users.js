@@ -32,6 +32,21 @@ module.exports.getUserById = (req, res) => {
     });
 };
 
+module.exports.getCurrentUserInfo = (req, res) => {
+  User.findById(req.user._id)
+    .then(user => {
+      if (!user) {
+        const ERROR_CODE = 404;
+        res.status(ERROR_CODE).send({ message: 'Пользователь не найден' });
+        return;
+      }
+      res.send(user)
+    })
+    .catch(err => {
+      res.status(500).send({ message: 'ошибка на стороне сервера' })
+    })
+}
+
 module.exports.setUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
 
@@ -54,6 +69,7 @@ module.exports.setUser = (req, res) => {
       res.status(ERROR_CODE).send({ message: 'Ошибка на стороне сервера' });
     });
 };
+
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
@@ -124,6 +140,7 @@ module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   User.findOne({ email })
+    .select('+password')
     .then(user => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
@@ -131,7 +148,7 @@ module.exports.login = (req, res) => {
 
       const matched = bcrypt.compare(password, user.password)
       const token = jwt.sign(
-        { _id: req.user._id },
+        { _id: user._id.toString() },
         '45ea781744ec7b4e07a1ff7e4adbd95bacff89e3d0266bb0e17a9f12ff31e01e',
         { expiresIn: '7d' }
       );
