@@ -12,13 +12,17 @@ module.exports.setCard = (req, res, next) => {
   const { name, link } = req.body;
   const { _id } = req.user;
 
-  Cards.create({ name, link, owner: _id })
+  Cards.create({
+    name,
+    link,
+    owner: _id
+  })
     .then((card) => res.send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestErr('Переданы некорректные данные при создании карточки.'))
+        next(new BadRequestErr('Переданы некорректные данные при создании карточки.'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -28,19 +32,20 @@ module.exports.deleteCardById = (req, res, next) => {
     .orFail(new Error('InvalidId'))
     .then(card => {
       if (card.owner.toString() === req.user._id.toString()) {
-        card.remove()
-        res.status(200).send({ message: 'Карточка успешно удалена' })
+        return card.remove(() => res.status(200)
+          .send({ message: 'Карточка успешно удалена' }));
       } else {
-        res.status(403).send({ message: 'У вас нет прав для удаления этой карточки' })
+        res.status(403)
+          .send({ message: 'У вас нет прав для удаления этой карточки' });
       }
     })
     .catch((err) => {
       if (err.message === 'InvalidId') {
-        next(new NotFoundErr(`Карточка с _id: ${ req.params.cardId } не найдена`));
+        next(new NotFoundErr(`Карточка с _id: ${req.params.cardId} не найдена`));
       } else if (err.name === 'CastError') {
         next(new BadRequestErr('Переданы некорректные данные'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -53,9 +58,9 @@ module.exports.addLikeOnCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'InvalidId') {
-        next(new NotFoundErr(`Карточка с _id: ${ req.params.cardId } не найдена`))
+        next(new NotFoundErr(`Карточка с _id: ${req.params.cardId} не найдена`));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -68,9 +73,9 @@ module.exports.removeLikeOnCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'InvalidId') {
-        next(new NotFoundErr(`Карточка с _id: ${ req.params.cardId } не найдена`))
+        next(new NotFoundErr(`Карточка с _id: ${req.params.cardId} не найдена`));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
