@@ -3,13 +3,11 @@ const ForbiddenError = require('../errors/forbidden-err');
 const AuthError = require('../errors/auth-err')
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
+  const token = req.cookie.token;
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!token) {
     next(new ForbiddenError('К этому ресурсу есть доступ только для авторизированных пользователей'))
   }
-
-  const token = authorization.replace('Bearer ', '');
 
   let payload;
   try {
