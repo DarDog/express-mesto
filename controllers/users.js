@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const NotFoundErr = require('../errors/not-found-err');
 const BadRequestErr = require('../errors/bad-request-err');
+const ConflictErr = require('../errors/conflict-err');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -46,8 +47,11 @@ module.exports.setUser = (req, res, next) => {
       email,
       password: hash
     }))
-    .then((user) => res.send(user))
+    .then((user) => res.send({data: { name, about, avatar, email }}))
     .catch((err) => {
+      if (err.name === 'MongoServerError' && err.code === 11000) {
+        next(new ConflictErr('Пользователь с таким email уже зарегистрирован'))
+      }
       if (err.name === 'ValidationError') {
         next(new BadRequestErr(err.message))
       } else {
@@ -68,7 +72,6 @@ module.exports.updateUser = (req, res, next) => {
       {
         new: true,
         runValidators: true,
-        upset: false
       },
     )
       .orFail(new Error('InvalidId'))
