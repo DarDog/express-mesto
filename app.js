@@ -1,11 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const { login, setUser } = require('./controllers/users')
-const auth = require('./middlewares/auth')
-const { errorHandler } = require('./middlewares/errors')
-const { celebrate, Joi, errors } = require('celebrate')
-const regExp = require('./regExp/regExp')
+const { celebrate, Joi, errors } = require('celebrate');
+const { login, setUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
+const { errorHandler } = require('./middlewares/errors');
+const regExp = require('./regExp/regExp');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -27,7 +27,7 @@ app.post('/signup', celebrate({
     avatar: Joi.string().pattern(regExp),
     email: Joi.string().email().required(),
     password: Joi.string().required().min(8).max(35),
-  })
+  }),
 }), setUser);
 
 app.use(auth);
@@ -43,3 +43,5 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`App listening on port:${PORT}`);
 });
+
+module.exports = app;

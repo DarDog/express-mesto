@@ -15,7 +15,7 @@ module.exports.setCard = (req, res, next) => {
   Cards.create({
     name,
     link,
-    owner: _id
+    owner: _id,
   })
     .then((card) => res.send({ card }))
     .catch((err) => {
@@ -30,14 +30,13 @@ module.exports.setCard = (req, res, next) => {
 module.exports.deleteCardById = (req, res, next) => {
   Cards.findById(req.params.cardId)
     .orFail(new Error('InvalidId'))
-    .then(card => {
+    .then((card) => {
       if (card.owner.toString() === req.user._id.toString()) {
         return card.remove(() => res.status(200)
           .send({ message: 'Карточка успешно удалена' }));
-      } else {
-        res.status(403)
-          .send({ message: 'У вас нет прав для удаления этой карточки' });
       }
+      res.status(403)
+        .send({ message: 'У вас нет прав для удаления этой карточки' });
     })
     .catch((err) => {
       if (err.message === 'InvalidId') {

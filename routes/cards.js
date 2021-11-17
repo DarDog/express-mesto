@@ -1,9 +1,9 @@
 const router = require('express')
   .Router();
+const { celebrate, Joi } = require('celebrate');
 const {
   getCards, setCard, deleteCardById, addLikeOnCard, removeLikeOnCard,
 } = require('../controllers/cards');
-const { celebrate, Joi } = require('celebrate');
 const regExp = require('../regExp/regExp');
 
 router.get('/', getCards);
@@ -17,7 +17,7 @@ router.post('/', celebrate({
       link: Joi.string()
         .pattern(regExp)
         .required(),
-    })
+    }),
 }), setCard);
 router.delete('/:cardId', celebrate({
   params: Joi.object()
@@ -25,7 +25,7 @@ router.delete('/:cardId', celebrate({
       cardId: Joi.string()
         .length(24)
         .hex(),
-    })
+    }),
 }), deleteCardById);
 router.put('/:cardId/likes', celebrate({
   params: Joi.object()
@@ -33,7 +33,7 @@ router.put('/:cardId/likes', celebrate({
       cardId: Joi.string()
         .length(24)
         .hex(),
-    })
+    }),
 }), addLikeOnCard);
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object()
@@ -41,7 +41,7 @@ router.delete('/:cardId/likes', celebrate({
       cardId: Joi.string()
         .length(24)
         .hex(),
-    })
+    }),
 }), removeLikeOnCard);
 
 module.exports = router;

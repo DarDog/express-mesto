@@ -1,6 +1,6 @@
-const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const NotFoundErr = require('../errors/not-found-err');
 const BadRequestErr = require('../errors/bad-request-err');
 const ConflictErr = require('../errors/conflict-err');
@@ -17,45 +17,51 @@ module.exports.getUserById = (req, res, next) => {
     .then((user) => {
       res.send({ data: user });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestErr('Введены некорректные данные'))
+        next(new BadRequestErr('Введены некорректные данные'));
       } else if (err.message === 'InvalidId') {
-        next(new NotFoundErr(`Пользователь с _id: ${ req.params.userId } не найден`))
+        next(new NotFoundErr(`Пользователь с _id: ${req.params.userId} не найден`));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
 
 module.exports.getCurrentUserInfo = (req, res, next) => {
   User.findById(req.user._id)
-    .then(user => {
-      res.send(user)
+    .then((user) => {
+      res.send(user);
     })
-    .catch(next)
-}
+    .catch(next);
+};
 
 module.exports.setUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
   bcrypt.hash(password, 10)
-    .then(hash => User.create({
+    .then((hash) => User.create({
       name,
       about,
       avatar,
       email,
-      password: hash
+      password: hash,
     }))
-    .then((user) => res.send({data: { name, about, avatar, email }}))
+    .then(() => res.send({
+      data: {
+        name, about, avatar, email,
+      },
+    }))
     .catch((err) => {
       if (err.name === 'MongoServerError' && err.code === 11000) {
-        next(new ConflictErr('Пользователь с таким email уже зарегистрирован'))
+        next(new ConflictErr('Пользователь с таким email уже зарегистрирован'));
       }
       if (err.name === 'ValidationError') {
-        next(new BadRequestErr(err.message))
+        next(new BadRequestErr(err.message));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -78,13 +84,13 @@ module.exports.updateUser = (req, res, next) => {
       .then((user) => res.send(user))
       .catch((err) => {
         if (err.message === 'InvalidId') {
-          next(new NotFoundErr(`Пользователь с _id: ${ req.user._id }`))
+          next(new NotFoundErr(`Пользователь с _id: ${req.user._id}`));
         } else if (err.name === 'ValidationError') {
           next(new BadRequestErr('Переданы некорректные данные при создании пользователя.'));
         } else if (err.name === 'CastError') {
-          next(new BadRequestErr('Введен некорректный _id'))
+          next(new BadRequestErr('Введен некорректный _id'));
         }
-        next(err)
+        next(err);
       });
   }
 };
@@ -107,11 +113,11 @@ module.exports.updateUserAvatar = (req, res, next) => {
       .then((user) => res.send(user))
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          next(new BadRequestErr('Переданы некорректные данные.'))
+          next(new BadRequestErr('Переданы некорректные данные.'));
         } else if (err.name === 'CastError') {
-          next(new BadRequestErr('Введен некорректный _id'))
+          next(new BadRequestErr('Введен некорректный _id'));
         } else {
-          next(err)
+          next(err);
         }
       });
   }
@@ -124,17 +130,17 @@ module.exports.login = (req, res, next) => {
     .select('+password')
     .orFail(new Error('InvalidEmail'))
 
-    .then(user => {
+    .then((user) => {
       bcrypt.compare(password, user.password)
-        .then(matched => {
+        .then((matched) => {
           if (!matched) {
-            next(new BadRequestErr('Неправильные email или password'))
+            next(new BadRequestErr('Неправильные email или password'));
           } else {
             const token = jwt.sign(
               { _id: user._id },
               '45ea781744ec7b4e07a1ff7e4adbd95bacff89e3d0266bb0e17a9f12ff31e01e',
               { expiresIn: '7d' },
-            )
+            );
             res.cookie('token', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
@@ -142,13 +148,13 @@ module.exports.login = (req, res, next) => {
 
               .end();
           }
-        })
+        });
     })
-    .catch(err => {
+    .catch((err) => {
       if (err.message === 'InvalidEmail') {
         next(new BadRequestErr('Неправильные email или password'));
       } else {
         next(err);
       }
-    })
+    });
 };
