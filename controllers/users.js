@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundErr = require('../errors/not-found-err');
 const BadRequestErr = require('../errors/bad-request-err');
+const AuthErr = require('../errors/auth-err');
 const ConflictErr = require('../errors/conflict-err');
 
 module.exports.getUsers = (req, res, next) => {
@@ -134,7 +135,7 @@ module.exports.login = (req, res, next) => {
       bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            next(new BadRequestErr('Неправильные email или password'));
+            next(new AuthErr('Неправильные email или password'));
           } else {
             const token = jwt.sign(
               { _id: user._id },
@@ -152,7 +153,7 @@ module.exports.login = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'InvalidEmail') {
-        next(new BadRequestErr('Неправильные email или password'));
+        next(new AuthErr('Неправильные email или password'));
       } else {
         next(err);
       }

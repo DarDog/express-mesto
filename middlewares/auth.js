@@ -3,7 +3,7 @@ const ForbiddenError = require('../errors/forbidden-err');
 const AuthError = require('../errors/auth-err');
 
 module.exports = (req, res, next) => {
-  const { token } = req.cookie;
+  const { token } = req.cookies;
 
   if (!token) {
     next(new ForbiddenError('К этому ресурсу есть доступ только для авторизированных пользователей'));

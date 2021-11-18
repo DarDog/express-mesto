@@ -33,10 +33,11 @@ module.exports.deleteCardById = (req, res, next) => {
     .orFail(new Error('InvalidId'))
     .then((card) => {
       if (card.owner.toString() === req.user._id.toString()) {
-        return card.remove(() => res.status(200)
+        card.remove(() => res.status(200)
           .send({ message: 'Карточка успешно удалена' }));
+      } else {
+        next(new ForbiddenErr('У вас нет прав для удаления этой карточки'));
       }
-      next(new ForbiddenErr('У вас нет прав для удаления этой карточки'));
     })
     .catch((err) => {
       if (err.message === 'InvalidId') {
