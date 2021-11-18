@@ -1,6 +1,7 @@
 const Cards = require('../models/card');
 const NotFoundErr = require('../errors/not-found-err');
 const BadRequestErr = require('../errors/bad-request-err');
+const ForbiddenErr = require('../errors/forbidden-err');
 
 module.exports.getCards = (req, res, next) => {
   Cards.find({})
@@ -35,8 +36,7 @@ module.exports.deleteCardById = (req, res, next) => {
         return card.remove(() => res.status(200)
           .send({ message: 'Карточка успешно удалена' }));
       }
-      res.status(403)
-        .send({ message: 'У вас нет прав для удаления этой карточки' });
+      next(new ForbiddenErr('У вас нет прав для удаления этой карточки'));
     })
     .catch((err) => {
       if (err.message === 'InvalidId') {

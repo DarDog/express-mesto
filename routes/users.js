@@ -26,8 +26,9 @@ router.patch('/me', celebrate({
       .min(2)
       .max(30)
       .required(),
-    avatar: Joi.string()
-      .pattern(regExp)
+    about: Joi.string()
+      .min(2)
+      .max(30)
       .required(),
   }),
 }), updateUser);
