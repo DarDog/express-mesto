@@ -17,7 +17,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(cors());
-app.options('*', cors());
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
