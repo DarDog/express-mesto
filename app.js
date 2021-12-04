@@ -14,11 +14,12 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(cors({
-  origin: [
-    'https://mesto.subb.nomoredomains.rocks',
-    'http://mesto.subb.nomoredomains.rocks',
-    'http://localhost:3000',
-  ],
+  origin: 'http://mesto.subb.nomoredomains.rocks'
+  // origin: [
+  //   'https://mesto.subb.nomoredomains.rocks',
+  //   'http://mesto.subb.nomoredomains.rocks',
+  //   'http://localhost:3000',
+  // ],
 }));
 
 app.use(bodyParser.json());
