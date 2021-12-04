@@ -13,6 +13,13 @@ const cors = require('cors');
 const { PORT = 3000 } = process.env;
 const app = express();
 
+app.use(cors({
+  origin: [
+    'https://mesto.subb.nomoredomains.rocks/',
+    'http://mesto.subb.nomoredomains.rocks/',
+    'http://localhost:3000',
+  ],
+}));
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -20,8 +27,6 @@ app.use(cookieParser());
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(requestLogger);
-
-app.use(cors());
 
 app.post('/signin', celebrate({
   body: Joi.object()
