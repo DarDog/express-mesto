@@ -15,8 +15,8 @@ const app = express();
 
 app.use(cors({
   origin: [
-    'https://mesto.subb.nomoredomains.rocks/',
-    'http://mesto.subb.nomoredomains.rocks/',
+    'https://mesto.subb.nomoredomains.rocks',
+    'http://mesto.subb.nomoredomains.rocks',
     'http://localhost:3000',
   ],
 }));
