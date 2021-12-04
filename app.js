@@ -8,7 +8,7 @@ const auth = require('./middlewares/auth');
 const { errorHandler } = require('./middlewares/errors');
 const regExp = require('./regExp/regExp');
 const { requestLogger, errorLogger } = require('./middlewares/Logger');
-const cors = require('./middlewares/cors')
+const cors = require('cors');
 
 const { PORT = 3000 } = process.env;
 const app = express();
