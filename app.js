@@ -3,12 +3,12 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
-const cors = require('cors')
 const { login, setUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { errorHandler } = require('./middlewares/errors');
 const regExp = require('./regExp/regExp');
 const { requestLogger, errorLogger } = require('./middlewares/Logger');
+const cors = require('./middlewares/cors')
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -16,7 +16,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(cors());
+app.use(cors())
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
