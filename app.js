@@ -13,7 +13,13 @@ const cors = require('cors');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  option: [
+    'http://mesto.subb.nomoredomains.rocks',
+    'https://mesto.subb.nomoredomains.rocks',
+    'http://localhost:3000',
+  ]
+}));
 
 app.use(bodyParser.json());
 app.use(cookieParser());
