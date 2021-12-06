@@ -130,7 +130,6 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email })
     .select('+password')
     .orFail(new Error('InvalidEmail'))
-
     .then((user) => {
       bcrypt.compare(password, user.password)
         .then((matched) => {
@@ -142,11 +141,11 @@ module.exports.login = (req, res, next) => {
               '45ea781744ec7b4e07a1ff7e4adbd95bacff89e3d0266bb0e17a9f12ff31e01e',
               { expiresIn: '7d' },
             );
-            res.cookie('token', token, {
+            res
+              .cookie('token', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
-            });
-            res.send({token})
+            }).end()
           }
         });
     })
