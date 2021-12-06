@@ -52,7 +52,10 @@ module.exports.setUser = (req, res, next) => {
     }))
     .then(() => res.send({
       data: {
-        name, about, avatar, email,
+        name,
+        about,
+        avatar,
+        email,
       },
     }))
     .catch((err) => {
@@ -75,7 +78,10 @@ module.exports.updateUser = (req, res, next) => {
   } else {
     User.findByIdAndUpdate(
       req.user._id,
-      { name, about },
+      {
+        name,
+        about
+      },
       {
         new: true,
         runValidators: true,
@@ -143,9 +149,11 @@ module.exports.login = (req, res, next) => {
             );
             res
               .cookie('token', token, {
-              maxAge: 3600000 * 24 * 7,
-              httpOnly: true,
-            }).end()
+                maxAge: 3600000 * 24 * 7,
+                httpOnly: true,
+                sameSite: 'None',
+              })
+              .end();
           }
         });
     })
