@@ -15,6 +15,8 @@ const app = express();
 
 require('dotenv').config();
 
+console.log(process.env.NODE_ENV)
+
 app.use(cors({
   option: [
     'http://mesto.subb.nomoredomains.rocks',
