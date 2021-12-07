@@ -26,7 +26,6 @@ app.use(cors({
     'https://mesto.subb.nomoredomains.rocks',
     'http://localhost:3000',
   ],
-  preflightContinue: true,
   credentials: true
 }));
 
