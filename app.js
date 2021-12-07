@@ -13,6 +13,8 @@ const cors = require('cors');
 const { PORT = 3000 } = process.env;
 const app = express();
 
+require('dotenv').config();
+
 app.use(cors({
   option: [
     'http://mesto.subb.nomoredomains.rocks',
